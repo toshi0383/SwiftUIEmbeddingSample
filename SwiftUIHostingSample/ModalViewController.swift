@@ -8,11 +8,14 @@ final class ModalViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if let spc = sheetPresentationController {
-            spc.detents = [.custom(resolver: { context in
-                self.height
-            })]
+        let customDetentIdentifier = UISheetPresentationController.Detent.Identifier("customIdentifier")
+        let customDetent = UISheetPresentationController.Detent.custom(identifier: customDetentIdentifier) { context in
+            self.height
+        }
 
+        if let spc = sheetPresentationController {
+            spc.detents = [customDetent]
+            //spc.largestUndimmedDetentIdentifier = customDetentIdentifier
             spc.preferredCornerRadius = 30
             spc.prefersGrabberVisible = true
         }

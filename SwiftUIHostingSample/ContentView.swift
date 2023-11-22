@@ -3,7 +3,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var isCollapsed = false
 
-    private var height: CGFloat { isCollapsed ? 200 : 150 }
+    private var height: CGFloat { 150 }
     var color: Color
     var onChangeHeight: (CGFloat) -> ()
 
@@ -15,10 +15,17 @@ struct ContentView: View {
     var body: some View {
 
         ZStack(alignment: .bottom) {
-            Rectangle()
-                .foregroundColor(color)
-                .onSizeChange { onChangeHeight($0.height) }
 
+            GeometryReader { proxy in
+                Group {
+                    if proxy.size.width < 500 || isCollapsed {
+                        VStack(spacing: 0) { content }
+                    } else {
+                        HStack(spacing: 0) { content }
+                    }
+                }
+                .onSizeChange { onChangeHeight($0.height) }
+            }
             Button("タップして高さ変更") {
                 withAnimation {
                     isCollapsed.toggle()
@@ -31,9 +38,16 @@ struct ContentView: View {
             .padding(15)
         }
         .frame(maxWidth: .infinity)
-        .frame(height: height)
     }
 
+    private var content: some View {
+        Group {
+            Color.cyan
+                .frame(height: height)
+            Color.pink
+                .frame(height: height)
+        }
+    }
 }
 
 // プレビュー
